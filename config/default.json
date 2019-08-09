@@ -1,4 +1,7 @@
 {
     "mongoURI": "mongodb+srv://DevCon:x3wA1o9uyVDL0c4VCO3y5F24Km@devconnector-egwun.mongodb.net/test?retryWrites=true&w=majority",
-    "jwtSecret": "eFxQ77LX95W23fLAgU9imNblzZ"
+    "jwtSecret": "eFxQ77LX95W23fLAgU9imNblzZ",
+    "githubClientId": "aa43b73aac1e5c2752d5",
+    "githubSecret": "657e13d4e2fddc0afba50024932653ca2ce02a1b"
+
 }
