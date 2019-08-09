@@ -1,0 +1,4 @@
+{
+    "mongoURI": "mongodb+srv://DevCon:x3wA1o9uyVDL0c4VCO3y5F24Km@devconnector-egwun.mongodb.net/test?retryWrites=true&w=majority",
+    "jwtSecret": "eFxQ77LX95W23fLAgU9imNblzZ"
+}
