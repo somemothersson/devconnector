@@ -7,6 +7,7 @@ const config = require("config");
 
 const Profile = require("../../models/profile");
 const User = require("../../models/users");
+// const Post = require("../../models/post")
 
 // @route   GET api/profile/me
 // @desc    Get users profile
@@ -42,15 +43,17 @@ router.post(
       check("status", "Status is required")
         .not()
         .isEmpty(),
-      check("status", "Status is required")
+      check("skills", "Skills are required")
         .not()
         .isEmpty()
     ]
   ],
   async (req, res) => {
+   
     const errors = validationResult(req);
+    // console.log(errors);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array });
+      return res.status(400).json({ errors: errors.array() });
     }
     const {
       company,
@@ -89,35 +92,21 @@ router.post(
     if (instagram) profileFields.social.instagram = instagram;
 
     try {
-      //Check if there is a profile for the User
-      let profile = await Profile.findOne({ user: req.user.id });
+      let profile = await Profile.findOneAndUpdate(
+        { user: req.user.id },
+        //set the profile fields
+        { $set: profileFields },
+        { new: true, upsert: true }
+      );
 
-      //If that profile is found
-      if (profile) {
-        //Update Profile
-        profile = await Profile.findOneAndUpdate(
-          { user: req.user.id },
-          //set the profile fields
-          { $set: profileFields },
-          { new: true, upsert: true }
-        );
-
-        return res.json(profile);
-      }
-
-      // Create
-      profile = new Profile(profileFields);
-
-      await profile.save();
       res.json(profile);
     } catch (err) {
+      // console.error(err.message);
       res.status(500).send("Server Error");
     }
-
-    res.send("Hello");
   }
 );
-// @route   POST api/profile
+// @route   GET api/profile
 // @desc    Get all profiles
 // @access  public
 router.get("/", async (req, res) => {
@@ -361,7 +350,6 @@ router.get("/github/:username", (req, res) => {
     console.error(err.message);
     res.status(500).send("Server Error");
   }
-  
 });
 
 module.exports = router;
