@@ -221,7 +221,7 @@ router.put(
 // @access  Private
 router.delete("/experience/:exp_id", auth, async (req, res) => {
   try {
-    const profile = await Profile.findOne({ user: req.user.id });
+    const profile = await Profile.findOne({ user: req.exp.id });
     //Remove Profile
     const removeIndex = profile.experience
       .map(item => item.id)
