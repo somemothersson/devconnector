@@ -7,6 +7,7 @@ const config = require("config");
 
 const Profile = require("../../models/profile");
 const User = require("../../models/users");
+const Post = require("../../models/post");
 // const Post = require("../../models/post")
 
 // @route   GET api/profile/me
@@ -145,6 +146,8 @@ router.get("/user/:user_id", async (req, res) => {
 // @access  Private
 router.delete("/", auth, async (req, res) => {
   try {
+    // Remove user posts
+    await Post.deleteMany({ user: req.user.id })
     //Remove Profile
     await Profile.findOneAndRemove({ user: req.user.id });
     //Remive User
@@ -221,17 +224,24 @@ router.put(
 // @access  Private
 router.delete("/experience/:exp_id", auth, async (req, res) => {
   try {
-    const profile = await Profile.findOne({ user: req.exp.id });
+    const foundProfile = await Profile.findOne({ user: req.user.id });
     //Remove Profile
-    const removeIndex = profile.experience
-      .map(item => item.id)
-      .indexOf(req.params.exp_id);
-
-    profile.experience.splice(removeIndex, 1);
-
-    await profile.save();
-
-    res.json(profile);
+    const expIds = foundProfile.experience
+      .map(exp => exp._id.toString())
+     
+    const removeIndex = expIds.indexOf(req.params.exp_id)
+    if (removeIndex === -1) {
+      return res.status(500).json({ msg: "Server Error"})
+    } else {
+      console.log(`expIds ${expIds}`)
+      console.log(`Type of expIds ${ typeof expIds}`)
+      console.log(`req.params ${req.params}`)
+      // console.log(`removed ${expIds.indexOf(req.params.exp_id)}`)
+      foundProfile.experience.splice(removeIndex, 1);
+      await foundProfile.save();
+      return res.status(200).json(foundProfile);
+  
+    }
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
@@ -305,17 +315,24 @@ router.put(
 // @access  Private
 router.delete("/education/:edu_id", auth, async (req, res) => {
   try {
-    const profile = await Profile.findOne({ user: req.user.id });
+    const foundProfile = await Profile.findOne({ user: req.user.id });
     //Remove Profile
-    const removeIndex = profile.education
-      .map(item => item.id)
-      .indexOf(req.params.edu_id);
-
-    profile.education.splice(removeIndex, 1);
-
-    await profile.save();
-
-    res.json(profile);
+    const eduIds = foundProfile.education
+      .map(edu => edu._id.toString())
+     
+    const removeIndex = eduIds.indexOf(req.params.edu_id)
+    if (removeIndex === -1) {
+      return res.status(500).json({ msg: "Server Error"})
+    } else {
+      console.log(`eduIds ${eduIds}`)
+      console.log(`Type of eduIds ${ typeof eduIds}`)
+      console.log(`req.params ${req.params}`)
+      // console.log(`removed ${eduIds.indexOf(req.params.edu_id)}`)
+      foundProfile.education.splice(removeIndex, 1);
+      await foundProfile.save();
+      return res.status(200).json(foundProfile);
+  
+    }
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");

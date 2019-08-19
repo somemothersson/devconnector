@@ -136,7 +136,7 @@ export const deleteExperience = id => async dispatch => {
       type: UPDATE_PROFILE,
       payload: res.data
     });
-    dispatch(setAlert("Experience Removed", "success"));
+    dispatch(setAlert("Experience Removed"));
   } catch (err) {
     dispatch({
       type: PROFILE_ERROR,
@@ -148,13 +148,13 @@ export const deleteExperience = id => async dispatch => {
 // Delete Education
 export const deleteEducation = id => async dispatch => {
   try {
-    const res = await axios.delete(`/api/profile/education${id}`);
+    const res = await axios.delete(`/api/profile/education/${id}`);
 
     dispatch({
       type: UPDATE_PROFILE,
       payload: res.data
     });
-    dispatch(setAlert("Education Removed", "success"));
+    dispatch(setAlert("Education Removed"));
   } catch (err) {
     dispatch({
       type: PROFILE_ERROR,
